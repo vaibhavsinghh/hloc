@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html ng-app = "amchartApp">
+
+  <head>
+    <title>New Amchart App</title>
+    <script type="text/javascript" src='/js/angular.min.js'></script>
+    <script type="text/javascript" src='/js/angular-resource.min.js'></script>
+    <script type="text/javascript" src="/js/controllers/app.js"></script>
+    <script type="text/javascript" src='/js/amcharts.js'></script>
+    <script type="text/javascript" src='/js/serial.js'></script>
+    <script type="text/javascript" src='/js/amChartsDirective.js'></script>
+  </head>
+  <body>
+
+   <div ng-controller="amchartController">
+    <h1> {{ graphvalues.length }} Events Created</h1>
+    <table width="100%" border=5>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Open at</th>
+          <th>high value</th>
+          <th>low value</th>
+          <th>Closed at</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+       <tr ng-repeat= "graphvalue in graphvalues">
+        <td> {{graphvalue.date}} </td>
+        <td> {{graphvalue.open}} </td>
+        <td> {{graphvalue.high}} </td>
+        <td> {{graphvalue.low}} </td>
+        <td> {{graphvalue.close}} </td>
+        <td> <center><button>remove</button></center></td>
+       </tr>
+      </tbody>
+    </table> <br>  
+    <form ng-submit="createValues()">
+        <input type="date" ng-model="date">
+        <input type="number" placeholder="open at" ng-model="open" ng-init="open=fetchValue()" disabled="disabled">
+        <input type="number" placeholder="closing at" ng-model="close" ng-init="close=fetchValue()" disabled="disabled">
+
+        <input type="number" placeholder="highest value" ng-model="high" ng-init="high=findMax()">
+        <input type="number" placeholder="low value" ng-model="low" ng-init="low=findLow()">
+    
+
+        <button type="submit" ng-click="showChart()">Add to chart</button>
+    </form>
+    </div>
+  </body>
+</html>
