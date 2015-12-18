@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html ng-app = "amchartApp">
-
+<meta http-equiv="refresh" content="300"> 
   <head>
     <title>New Amchart App</title>
     <script type="text/javascript" src='/js/angular.min.js'></script>
@@ -9,7 +9,14 @@
     <script type="text/javascript" src='/js/amcharts.js'></script>
     <script type="text/javascript" src='/js/serial.js'></script>
     <script type="text/javascript" src='/js/amChartsDirective.js'></script>
-  </head>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+       $(document).ready(function() {
+       $("#button").zoomTarget();
+        });
+    </script>
+    </head>
   <body>
 
    <div ng-controller="amchartController">
@@ -44,9 +51,12 @@
         <input type="number" placeholder="highest value" ng-model="high" ng-init="high=findMax()">
         <input type="number" placeholder="low value" ng-model="low" ng-init="low=findLow()">
     
-
-        <button type="submit" ng-click="showChart()">Add to chart</button>
+        
+         
+        <button type="submit" id="button" ng-click="showChart()">Add to chart</button>
+        <button type="button" id="button" ng-click="showChart()">Show chart</button>
     </form>
+
     </div>
   </body>
 </html>

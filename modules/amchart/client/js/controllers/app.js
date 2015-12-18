@@ -10,33 +10,45 @@ app.controller('amchartController', ['$scope','$resource', function ($scope, $re
 
     });
 
-  $scope.addValues = function(){
-    window.location = "/value.html";
-   }
-
-  $scope.showChart = function(){
-    window.location = "/";
-   }
-  $scope.fetchValue = function(){
-    return  (Math.round(Math.random()*40)+300);
-   }
-
   // $scope.findHigh = function(){
   //  return  (Math.max($scope.open,$scope.close));
   // }
-
-  $scope.findLow = function(){
-    console.log($scope.open);
-    console.log($scope.close);
-    return  (Math.max($scope.open,$scope.close)-1);
+   var myArray = [];
+   var myHashMap = {};
+   var temp1=0;
+    var temp2=0;
+    var val1=0;
+    var val2=0;
+    var val3=0;
+    var val4=0;
+    var datevalue=0;
+    var i=0;
+   function graphValues() {
     
-   }
-
-   $scope.findMax = function(){
-    console.log($scope.open);
-    console.log($scope.close);
-    return  (Math.max($scope.open,$scope.close)+1);
     
+    
+    
+
+      for( i = 0; i < 50; i++)   {
+
+        temp1=(Math.round(Math.random()*40)+300);
+        temp2=(Math.round(Math.random()*40)+300);
+        
+        console.log(temp1);
+        console.log(temp2);
+        val1=temp1;
+        val2=temp2;
+        val3=(Math.max(val1,val2)+1);
+        console.log(val3);
+        val4=(Math.max(val1,val2)-1);
+        var now = new Date();
+        myHashMap = {"date": now.setDate(now.getDate() + i), "open": val1,"close": val2,"high": val3, "low": val4};
+    
+        myArray.push(myHashMap);
+        myHashMap = {};
+      }
+         return myArray;
+
    }
 
 
@@ -46,8 +58,11 @@ app.controller('amchartController', ['$scope','$resource', function ($scope, $re
         Amchart.query(function (results) {
         $scope.graphvalues = results;
 
-     
-    var chart = AmCharts.makeChart("chartdiv", {
+     });
+
+      graphValues();
+
+      var chart = AmCharts.makeChart("chartdiv", {
                 "type": "serial",
                 "valueAxes": [{
                     "position": "left"
@@ -83,13 +98,40 @@ app.controller('amchartController', ['$scope','$resource', function ($scope, $re
                 "categoryAxis": {
                     "parseDates": true
                 },
-                "dataProvider": $scope.graphvalues,
+                  "dataProvider": myArray,
                 "export": {
                     "enabled": true,
                     "position": "bottom-right"
                 }
+
             });
-      });
+
+      setInterval(function () {
+        // normally you would load new datapoints here,
+        // but we will just generate some random values
+        // and remove the value from the beginning so that
+        // we get nice sliding graph feeling
+        
+        // // remove datapoint from the beginning
+        // chart.dataProvider.shift();
+        chart.dataProvider = [];
+        for( i = 0; i < 50; i++)   {
+        // // add new one at the end
+        
+        temp1=(Math.round(Math.random()*40)+300);
+        temp2=(Math.round(Math.random()*40)+300);
+        
+        val1=temp1;
+        val2=temp2;
+        val3=(Math.max(val1,val2)+1);
+        console.log(val3);
+        val4=(Math.max(val1,val2)-1);
+        var now = new Date();
+        myHashMap = {"date": now.setDate(now.getDate() + i), "open": val1,"close": val2,"high": val3, "low": val4};
+        chart.dataProvider.push(myHashMap);
+        chart.validateData(); 
+        }
+          }, 5000);
 
             chart.addListener("rendered", zoomChart);
             zoomChart();
@@ -99,24 +141,8 @@ app.controller('amchartController', ['$scope','$resource', function ($scope, $re
                 // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
                 chart.zoomToIndexes(chart.dataProvider.length - 50, chart.dataProvider.length - 1);
             }
-    }
-    $scope.createValues = function () {
-      var graphvalue   = new Amchart();
-      graphvalue.date  = $scope.date;
-      graphvalue.open  = $scope.open;
-      graphvalue.high  = $scope.high;
-      graphvalue.low   = $scope.low;
-      graphvalue.close = $scope.close;
-      graphvalue.$save(function (result) {
-        $scope.graphvalues.push(graphvalue);
-        $scope.date = '' ;
-        $scope.open = '' ;
-        $scope.high='';
-        $scope.low='';
-        $scope.close='';
 
-      });
-      
     }
+
 
 }]);
